@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ef12dea8cb06b2d649d8602d15d2e956a86bf24b"
+      }
+    },
+    {
+      "identity" : "swifthighlighting",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/chriseidhof/SwiftHighlighting",
+      "state" : {
+        "branch" : "main",
+        "revision" : "8c6f459831335aad962a6e0e40819424e6de354a"
+      }
+    }
+  ],
+  "version" : 2
+}

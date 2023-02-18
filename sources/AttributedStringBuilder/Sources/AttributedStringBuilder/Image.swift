@@ -1,8 +1,10 @@
-//
-//  File.swift
-//  
-//
-//  Created by Ankui on 2/18/23.
-//
+import Cocoa
 
-import Foundation
+extension NSImage: AttributedStringConvertible {
+    @MainActor
+    func attributedString(environment: Environment) -> [NSAttributedString] {
+        let attachment = NSTextAttachment()
+        attachment.image = self
+        return [.init(attachment: attachment)]
+    }
+}

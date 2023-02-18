@@ -1,8 +1,8 @@
-//
-//  File.swift
-//  
-//
-//  Created by Ankui on 2/18/23.
-//
-
 import Foundation
+import SwiftHighlighting
+
+extension String {
+    func highlightSwift() -> NSAttributedString {
+        .highlightSwift(self, stylesheet: .xcodeDefault)
+    }
+}

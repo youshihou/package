@@ -1,10 +1,24 @@
 #if DEBUG
 import SwiftUI
 
+struct CustomStylesheet: Stylesheet {
+    func strong(attributes: inout Attributes) {
+        attributes.foregroundColor = .red
+    }
+}
+
+
+
 @AttributedStringBuilder
 var example: some AttributedStringConvertible {
     "Hello World!"
         .bold()
+    """
+    This is some markdown with **strong** text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempus, tortor eu maximus gravida, ante diam fermentum magna, in gravida ex tellus ac purus.
+    
+    Another *paragraph*.
+    """
+        .markdown(stylesheet: CustomStylesheet())
     NSImage(systemSymbolName: "hand.wave", accessibilityDescription: nil)!
     Embed(proposal: .init(width: 200, height: nil)) {
         HStack {
@@ -13,8 +27,10 @@ var example: some AttributedStringConvertible {
             Color.red.frame(width: 100, height: 50)
         }
     }
-    try! AttributedString(markdown: "Hello *World*")
 }
+
+let sampleAttributes = Attributes(family: "Menlo", size: 16)
+
 
 struct TextView: NSViewRepresentable {
     var attributedString: NSAttributedString
@@ -22,8 +38,8 @@ struct TextView: NSViewRepresentable {
     func makeNSView(context: Context) -> NSTextView {
         let v = NSTextView()
         v.isEditable = false
-        v.textContainer!.lineFragmentPadding = 0
-        v.textContainer!.widthTracksTextView = false
+        v.textContainer?.lineFragmentPadding = 0
+        v.textContainer?.widthTracksTextView = false
         v.drawsBackground = true
         v.backgroundColor = .white
         return v
@@ -43,7 +59,6 @@ struct TextView: NSViewRepresentable {
 }
 
 
-let sampleAttributes = Attributes(family: "Tiempos Text", size: 20)
 
 struct DebugPreview: PreviewProvider {
     static var previews: some View {
@@ -51,6 +66,7 @@ struct DebugPreview: PreviewProvider {
             .joined()
             .run(environment: .init(attributes: sampleAttributes))
         TextView(attributedString: attStr)
+            .frame(width: 400)
             .previewLayout(.sizeThatFits)
     }
 }

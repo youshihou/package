@@ -6,11 +6,12 @@ struct Attributes {
     var traits: NSFontTraitMask = []
     var weight: Int = 5
     var foregroundColor: NSColor = .black
+    var lineHeightMultiple: CGFloat = 1.2
+    var paragraphSpacing: CGFloat = 10
+    
     
     var bold: Bool {
-        get {
-            traits.contains(.boldFontMask)
-        }
+        get { traits.contains(.boldFontMask) }
         set {
             if newValue {
                 traits.insert(.boldFontMask)
@@ -20,12 +21,28 @@ struct Attributes {
         }
     }
     
+    var italic: Bool {
+        get { traits.contains(.italicFontMask) }
+        set {
+            if newValue {
+                traits.insert(.italicFontMask)
+            } else {
+                traits.remove(.italicFontMask)
+            }
+        }
+    }
+
+    
     var dict: [NSAttributedString.Key: Any] {
         let fm = NSFontManager.shared
-        let font = fm.font(withFamily: family, traits: traits, weight: weight, size: size)
+        let font = fm.font(withFamily: family, traits: traits, weight: weight, size: size)!
+        let ps = NSMutableParagraphStyle()
+        ps.lineHeightMultiple = lineHeightMultiple
+        ps.paragraphSpacing = paragraphSpacing
         return [
             .font: font,
-            .foregroundColor: foregroundColor
+            .foregroundColor: foregroundColor,
+            .paragraphStyle: ps
         ]
     }
 }

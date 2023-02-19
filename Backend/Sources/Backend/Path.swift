@@ -1,8 +1,8 @@
-//
-//  File.swift
-//  
-//
-//  Created by Ankui on 2/19/23.
-//
-
 import Foundation
+
+extension Rule {
+    public func path(_ component: String) -> some Rule {
+        fatalError("TODO")
+        return self
+    }
+}

@@ -6,18 +6,18 @@ public protocol Rule {
 }
 
 extension Rule {
-    public func run() -> Response? {
+    public func run(environment: EnvironmentValues) -> Response? {
         if let b = self as? BuiltinRule {
-            return b.execute()
+            return b.execute(environment: environment)
         } else {
-            return rules.run()
+            return rules.run(environment: environment)
         }
     }
 }
 
 
 protocol BuiltinRule {
-    func execute() -> Response?
+    func execute(environment: EnvironmentValues) -> Response?
 }
 
 extension BuiltinRule {
@@ -34,7 +34,7 @@ extension Never: Rule {
 
 
 extension Response: Rule, BuiltinRule {
-    func execute() -> Response? {
+    func execute(environment: EnvironmentValues) -> Response? {
         self
     }
 }

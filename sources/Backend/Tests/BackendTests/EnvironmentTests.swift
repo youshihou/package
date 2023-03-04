@@ -6,6 +6,35 @@
 //
 
 import XCTest
+import Backend
+
+
+struct GreetingKey: EnvironmentKey {
+    static var defaultValue: String = "Hello"
+}
+
+extension EnvironmentValues {
+    var greeting: String {
+        get { self[GreetingKey.self] }
+        set { self[GreetingKey.self] = newValue }
+    }
+}
+
+struct Greeting: Rule {
+    @Environment(\.greeting) var greeting
+    
+    var rules: some Rule {
+        greeting
+    }
+}
+
+struct Home: Rule {
+    var rules: some Rule {
+        Greeting().path("greeting")
+    }
+}
+
+
 
 final class EnvironmentTests: XCTestCase {
 
@@ -18,11 +47,13 @@ final class EnvironmentTests: XCTestCase {
     }
 
     func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+        XCTAssertEqual(Greeting().run(environment: .init(request: .init(path: "/"))), Response(body: "Hello".toData))
+        
+        let rule = Greeting().environment(\.greeting, "Overridden")
+        XCTAssertEqual(rule.run(environment: .init(request: .init(path: "/"))), Response(body: "Overridden".toData))
+        
+        let rule2 = Home().environment(\.greeting, "Overridden")
+        XCTAssertEqual(rule2.run(environment: .init(request: .init(path: "/greeting"))), Response(body: "Overridden".toData))
     }
 
     func testPerformanceExample() throws {

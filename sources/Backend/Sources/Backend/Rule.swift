@@ -9,9 +9,13 @@ extension Rule {
     public func run(environment: EnvironmentValues) -> Response? {
         if let b = self as? BuiltinRule {
             return b.execute(environment: environment)
-        } else {
-            return rules.run(environment: environment)
         }
+        let m = Mirror(reflecting: self)
+        for c in m.children {
+            guard let p = c.value as? DynamicProperty else { continue }
+            p.install(environment)
+        }
+        return rules.run(environment: environment)
     }
 }
 

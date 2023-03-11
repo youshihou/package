@@ -25,6 +25,16 @@ public struct RuleBuilder {
     public static func buildEither<R0: Rule, R1: Rule>(second component: R1) -> Either<R0, R1> {
         Either<R0, R1>.right(component)
     }
+    
+    public static func buildOptional<R: Rule>(_ component: R?) -> R? {
+        component
+    }
+}
+
+extension Optional: BuiltinRule, Rule where Wrapped: Rule {
+    func execute(environment: EnvironmentValues) async throws -> Response? {
+        try await self?.run(environment: environment)
+    }
 }
 
 
@@ -32,12 +42,12 @@ public enum Either<R0: Rule, R1: Rule>: BuiltinRule, Rule {
     case left(R0)
     case right(R1)
     
-    func execute(environment: EnvironmentValues) -> Response? {
+    func execute(environment: EnvironmentValues) async throws -> Response? {
         switch self {
         case .left(let l):
-            return l.run(environment: environment)
+            return try await l.run(environment: environment)
         case .right(let r):
-            return r.run(environment: environment)
+            return try await r.run(environment: environment)
         }
     }
 }
@@ -48,10 +58,10 @@ struct RulePair<R0: Rule, R1: Rule>: BuiltinRule, Rule {
     var r0: R0
     var r1: R1
     
-    func execute(environment: EnvironmentValues) -> Response? {
-        if let r = r0.run(environment: environment) {
+    func execute(environment: EnvironmentValues) async throws -> Response? {
+        if let r = try await r0.run(environment: environment) {
             return r
         }
-        return r1.run(environment: environment)
+        return try await r1.run(environment: environment)
     }
 }

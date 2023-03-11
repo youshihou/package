@@ -7,10 +7,10 @@ public struct PathReader<Content: Rule>: BuiltinRule, Rule {
         self.content = content
     }
     
-    func execute(environment: EnvironmentValues) -> Response? {
+    func execute(environment: EnvironmentValues) async throws -> Response? {
         guard let c = environment.remainingPath.first else { return nil }
         var copy = environment
         copy.remainingPath.removeFirst()
-        return content(c).run(environment: copy)
+        return try await content(c).run(environment: copy)
     }
 }

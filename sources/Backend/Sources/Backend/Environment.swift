@@ -34,10 +34,10 @@ struct EnvironmentWriter<Value, Content: Rule>: BuiltinRule, Rule {
     var value: Value
     var content: Content
     
-    func execute(environment: EnvironmentValues) -> Response? {
+    func execute(environment: EnvironmentValues) async throws -> Response? {
         var copy = environment
         copy[keyPath: keyPath] = value
-        return content.run(environment: copy)
+        return try await content.run(environment: copy)
     }
 }
 
